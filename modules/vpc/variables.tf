@@ -1,26 +1,25 @@
-# Variables used in vpc module
-
+# Variables used in VPC module
 variable "vpc_name" {
-  description = "Name of VPC"
+  description = "The name of the VPC."
   type        = string
 }
 
 variable "availability_zones" {
-  description = "List of availability zones"
+  description = "A list of availability zones for the VPC."
   type        = list(string)
 }
 
 variable "vpc_cidr" {
-  description = "CIDR block for the VPC"
+  description = "The CIDR block for the VPC."
   type        = string
 }
 
 variable "public_cidr" {
-  description = "List of CIDR blocks for public subnets"
+  description = "A list of CIDR blocks for the public subnets."
   type        = list(string)
 }
 
 variable "private_cidr" {
-  description = "List of CIDR blocks for private subnets"
+  description = "A list of CIDR blocks for the private subnets."
   type        = list(string)
 }

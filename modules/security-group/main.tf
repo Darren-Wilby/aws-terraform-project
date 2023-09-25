@@ -2,7 +2,7 @@ resource "aws_security_group" "security_group" {
   name = var.sg_name
 
   # Conditionally allow incoming HTTP (port 80) traffic
-  dynamic "ingress_http" {
+  dynamic "ingress" {
     for_each = var.allow_http_traffic ? [1] : []
     content {
       from_port   = 80
@@ -13,7 +13,7 @@ resource "aws_security_group" "security_group" {
   }
 
   # Conditionally allow incoming HTTPS (port 443) traffic
-  dynamic "ingress_https" {
+  dynamic "ingress" {
     for_each = var.allow_https_traffic ? [1] : []
     content {
       from_port   = 443
@@ -24,18 +24,18 @@ resource "aws_security_group" "security_group" {
   }
 
   # Conditionally allow incoming SSH traffic
-  dynamic "ingress_ssh" {
+  dynamic "ingress" {
     for_each = var.allow_ssh_traffic ? [1] : []
     content {
       from_port   = 22
       to_port     = 22
       protocol    = "tcp"
-      cidr_blocks = [var.ssh_ip]
+      cidr_blocks = ["${var.ssh_ip}/32"]
     }
   }
 
   # Conditionally allow outgoing traffic
-  dynamic "egress_traffic" {
+  dynamic "egress" {
     for_each = var.allow_outgoing_traffic ? [1] : []
     content {
       from_port   = 0

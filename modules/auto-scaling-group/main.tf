@@ -1,28 +1,25 @@
+# Launch template
 resource "aws_launch_template" "launch_template" {
-  instance_type = "t2.micro"
-  image_id = "ami-0eb260c4d5475b901"
-  key_name = "MyKeyPair"
-  #subnet_id = var.public_subnet_ids[0]
-  #associate_public_ip_address = true
-  vpc_security_group_ids = var.security_group_ids
-
-  user_data = base64encode(file("./nginx/userdata.tpl"))
+  instance_type = var.asg_instance_type
+  image_id      = var.asg_ami
+  key_name      = var.asg_key_name
+  network_interfaces {
+    associate_public_ip_address = var.asg_public_ip
+    security_groups             = [var.security_group_id]
+  }
+  user_data = var.user_data == null ? null : base64encode(file(var.user_data))
 }
 
+# Auto Scaling Group
 resource "aws_autoscaling_group" "asg" {
-  min_size                  = 3
-  max_size                  = 3
-  desired_capacity          = 3
-  vpc_zone_identifier      = var.public_subnet_ids
+  name                = var.asg_name
+  target_group_arns   = var.target_group_arns
+  min_size            = var.min_size
+  max_size            = var.max_size
+  desired_capacity    = var.desired_capacity
+  vpc_zone_identifier = var.public_subnet_ids
   launch_template {
     id      = aws_launch_template.launch_template.id
-    version = "$Latest"
+    version = var.launch_template_version
   }
-}
-
-resource "aws_autoscaling_policy" "policy" {
-  name = "policy"
-  scaling_adjustment = 1
-  adjustment_type = "ChangeInCapacity"
-  autoscaling_group_name = aws_autoscaling_group.asg.name
 }

@@ -1,36 +1,39 @@
-# output from `~/modules/vpc/outputs.tf`
-
-variable "public_subnet_ids" {
-  description = "List of public subnet IDs"
-  type        = list(string)
+# Variables used in the EC2 module
+variable "desired_instances" {
+  description = "The desired number of EC2 instances."
+  type        = number
 }
 
-# output from `~/modules/security-group/outputs.tf`
-
-variable "security_group_ids" {
-  description = "ID of the security group"
-  type        = string
-}
-
-
-# variables used in ec2 module
-
-variable "ami" {
-  description = "ID of AMI"
+variable "ec2_ami" {
+  description = "The ID of the AMI to use for the EC2 instance."
   type        = string
 }
 
 variable "ec2_instance_type" {
-  description = "Type of instance"
+  description = "The type of EC2 instance to launch."
   type        = string
 }
 
-variable "key_name" {
-  description = "Name of key"
+variable "ec2_key_name" {
+  description = "The name of the SSH key pair used for authentication."
   type        = string
 }
 
-variable "public_ip" {
-  description = "Decides whether public IP address will be assigned"
+variable "ec2_public_ip" {
+  description = "Whether to associate a public IP address with the EC2 instance (true/false)."
   type        = bool
+}
+
+
+# Output(s) from the VPC module
+variable "public_subnet_ids" {
+  description = "A list of IDs for the public subnets within the VPC."
+  type        = list(string)
+}
+
+
+# Output(s) from the security group module
+variable "security_group_id" {
+  description = "ID for the created security group."
+  type        = string
 }
